@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.jeesite.modules.love.interceptor.OAuth2Interceptor;
+import com.jeesite.modules.love.interceptor.AppLoginInterceptor;
 
 @Configuration
 public class AppConfigAdapter implements WebMvcConfigurer{
@@ -30,7 +31,8 @@ public class AppConfigAdapter implements WebMvcConfigurer{
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addInterceptor(OAuth2Interceptor()).addPathPatterns("${frontPath}/app/**");
+		registry.addInterceptor(AppLoginInterceptor()).addPathPatterns("/app");
+		registry.addInterceptor(OAuth2Interceptor()).addPathPatterns("/**");
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}
 	
@@ -38,4 +40,11 @@ public class AppConfigAdapter implements WebMvcConfigurer{
     public OAuth2Interceptor OAuth2Interceptor() {
         return new OAuth2Interceptor();
     }
+    
+    @Bean
+    public AppLoginInterceptor AppLoginInterceptor() {
+        return new AppLoginInterceptor();
+    }
+    
+    
 }
