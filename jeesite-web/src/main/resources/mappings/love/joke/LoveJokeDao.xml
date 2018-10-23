@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.love.dao.LoveJokeDao">
+	
+<!-- 	查询数据 -->
+	<select id="findList" resultType="LoveJoke">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY 
+	</select>
+	
+	<select id="findByKey" resultType="com.jeesite.modules.love.entity.LoveJoke" parameterType="string">
+		SELECT * FROM joke a
+		where joke_name REGEXP '${k}' OR joke_content REGEXP '${k}'
+		ORDER BY direc_id , joke_id ASC
+	</select>
+	
+	<select id="findByDirecId" resultType="com.jeesite.modules.love.entity.LoveJoke" parameterType="string">
+		SELECT * FROM joke a
+		where direc_id = '${k}'
+		ORDER BY direc_id , joke_id ASC
+	</select>
+	
+	
+</mapper>

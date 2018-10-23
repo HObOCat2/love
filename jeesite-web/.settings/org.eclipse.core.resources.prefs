@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/resources/config/beetl.properties=UTF-8
+encoding//src/main/resources/config/j2cache.properties=UTF-8
+encoding//src/main/resources/config/ueditor.json=UTF-8
+encoding//src/main/resources/views/modules/demo/demoDataGridEditGrid.html=UTF-8
+encoding//src/main/resources/views/modules/love/loveJokeForm.html=UTF-8
+encoding//src/main/resources/views/modules/love/loveJokeList.html=UTF-8
+encoding//src/test/java=UTF-8
+encoding/<project>=UTF-8

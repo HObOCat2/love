@@ -1,0 +1,119 @@
+<% layout('/layouts/default.html', {title: 'joke管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('joke管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('joke:loveJoke:edit')){ %>
+					<a href="${ctx}/joke/loveJoke/form" class="btn btn-default btnTool" title="${text('新增joke')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${loveJoke}" action="${ctx}/joke/loveJoke/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('joke_name')}：</label>
+					<div class="control-inline">
+						<#form:input path="jokeName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('direc_id')}：</label>
+					<div class="control-inline">
+						<#form:input path="direcId" maxlength="32" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('direc_name')}：</label>
+					<div class="control-inline">
+						<#form:input path="direcName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('joke_type')}：</label>
+					<div class="control-inline">
+						<#form:input path="jokeType" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('big_name')}：</label>
+					<div class="control-inline">
+						<#form:input path="bigName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('big_id')}：</label>
+					<div class="control-inline">
+						<#form:input path="bigId" maxlength="32" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('joke_content')}：</label>
+					<div class="control-inline">
+						<#form:input path="jokeContent" maxlength="2000" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('use_flag')}：</label>
+					<div class="control-inline">
+						<#form:input path="useFlag" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('joke_sort')}：</label>
+					<div class="control-inline">
+						<#form:input path="jokeSort" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('joke_name')}', name:'jokeName', index:'a.joke_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/joke/loveJoke/form?jokeId='+row.jokeId+'" class="btnList" data-title="${text('编辑joke')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('direc_id')}', name:'direcId', index:'a.direc_id', width:150, align:"left"},
+		{header:'${text('direc_name')}', name:'direcName', index:'a.direc_name', width:150, align:"left"},
+		{header:'${text('joke_type')}', name:'jokeType', index:'a.joke_type', width:150, align:"left"},
+		{header:'${text('big_name')}', name:'bigName', index:'a.big_name', width:150, align:"left"},
+		{header:'${text('big_id')}', name:'bigId', index:'a.big_id', width:150, align:"left"},
+		{header:'${text('joke_content')}', name:'jokeContent', index:'a.joke_content', width:150, align:"left"},
+		{header:'${text('use_flag')}', name:'useFlag', index:'a.use_flag', width:150, align:"left"},
+		{header:'${text('joke_sort')}', name:'jokeSort', index:'a.joke_sort', width:150, align:"center"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('joke:loveJoke:edit')){ %>
+				actions.push('<a href="${ctx}/joke/loveJoke/form?jokeId='+row.jokeId+'" class="btnList" title="${text('编辑joke')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/joke/loveJoke/disable?jokeId='+row.jokeId+'" class="btnList" title="${text('停用joke')}" data-confirm="${text('确认要停用该joke吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/joke/loveJoke/enable?jokeId='+row.jokeId+'" class="btnList" title="${text('启用joke')}" data-confirm="${text('确认要启用该joke吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/joke/loveJoke/delete?jokeId='+row.jokeId+'" class="btnList" title="${text('删除joke')}" data-confirm="${text('确认要删除该joke吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
